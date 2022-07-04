@@ -1,0 +1,844 @@
+{
+	"info": {
+		"_postman_id": "084a4bf9-ffde-430b-bb55-f1f84b71e28c",
+		"name": "order creation collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20734407"
+	},
+	"item": [
+		{
+			"name": "api/oauth2/refreshtoken",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"var response2 = pm.response.json()\r",
+							"var tokenvalue = response2.accessToken\r",
+							"console.log\r",
+							"\r",
+							"pm.environment.set(\"token\", tokenvalue);\r",
+							"console.log"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"refreshToken\": \"e92b1b8f-7b68-408e-8887-dcbdd2a4b21e\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}/api/oauth2/refreshtoken",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"oauth2",
+						"refreshtoken"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/users",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var  random = Math.random().toString(36).substring(2) \r",
+							"var email = \"oli\"+ random +\"@gmail.com\"\r",
+							"pm.collectionVariables.set(\"emailaddress\",email)"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var response = JSON.parse(responseBody)\r",
+							"var id = response.id\r",
+							"console.log\r",
+							"\r",
+							"var response2 = pm.response.json()\r",
+							"var id2 = response2.id\r",
+							"console.log\r",
+							"\r",
+							"pm.collectionVariables.set(\"userId\", id2);\r",
+							"\r",
+							"pm.test(\"Status code is 200\",()=> {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"verify status message OK\",()=>{\r",
+							"    pm.expect(pm.response.status).to.eqls(\"OK\")\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\": \"hari\",\r\n    \"lastName\": \"N\",\r\n    \"email\": \"{{emailaddress}}\",\r\n    \"dateOfBirth\": \"2000-09-09\",\r\n    \"userType\": \"STANDARD\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}/api/users",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/users/{userId}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Status code is 200\",()=> {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"verify status message OK\",()=>{\r",
+							"    pm.expect(pm.response.status).to.eqls(\"OK\")\r",
+							"})\r",
+							"pm.test(\"Response time is less than 200ms\",()=> {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"pm.sendRequest(\"https://postman-echo.com/get\", function (err, response) {\r",
+							"    console.log(response.json());\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{protocol}}://{{host}}/api/users/{{userId}}",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/practices",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var response = JSON.parse(responseBody)\r",
+							"var prcid = response.id\r",
+							"console.log\r",
+							"\r",
+							"pm.collectionVariables.set(\"practicesId\", prcid);\r",
+							"console.log\r",
+							"\r",
+							"pm.test(\"Status code is 200\",()=> {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"verify status message OK\",()=>{\r",
+							"    pm.expect(pm.response.status).to.eqls(\"OK\")\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Juno Medical\",\r\n    \"primaryPhone\": \"8586472374\",\r\n    \"secondaryPhone\": \"8586472374\",\r\n    \"primaryEmail\": \"medical@junodx.com\",\r\n    \"patientEmail\": \"support@junodx.com\",\r\n    \"billingEmail\": \"billing@junodx.com\",\r\n    \"contactAddress\": {\r\n        \"street\": \"11511 Sorrento Valley Rd\",\r\n        \"city\": \"San Diego\",\r\n        \"state\": \"CA\",\r\n        \"postcalCode\": \"93023\",\r\n        \"country\": \"United States\"\r\n    },\r\n    \"locations\": [\r\n        {\r\n            \"name\": \"Juno Headquarters\",\r\n            \"phone\": \"8586472374\",\r\n            \"address\": {\r\n                \"street\": \"11511 Sorrento Valley Rd\",\r\n                \"city\": \"San Diego\",\r\n                \"state\": \"CA\",\r\n                \"postcalCode\": \"93023\",\r\n                \"country\": \"United States\"\r\n            }\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}/api/practices",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"practices"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/practices{{practicesId}}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Status code is 200\",()=> {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"verify status message OK\",()=>{\r",
+							"    pm.expect(pm.response.status).to.eqls(\"OK\")\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{protocol}}://{{host}}/api/practices/{{practicesId}}",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"practices",
+						"{{practicesId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/practices/providers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var response = JSON.parse(responseBody)\r",
+							"var prvid = response.id\r",
+							"console.log\r",
+							"\r",
+							"pm.collectionVariables.set(\"providerId\", prvid);\r",
+							"console.log\r",
+							"\r",
+							"pm.test(\"Status code is 200\",()=> {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"verify status message OK\",()=>{\r",
+							"    pm.expect(pm.response.status).to.eqls(\"OK\")\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"contactPhone\": {\r\n        \"phoneNumber\": \"{{$randomPhoneNumber}}\"\r\n    },\r\n    \"contactAddress\": {\r\n        \"street\": \"11511 Sorrento Valley Rd\",\r\n        \"city\": \"San Diego\",\r\n        \"state\": \"CA\",\r\n        \"postalCode\": null,\r\n        \"country\": \"United States\",\r\n        \"primaryMailingAddress\": false,\r\n        \"primaryAddress\": false\r\n    },\r\n    \"npi\": \"234234324\",\r\n    \"upin\": \"345435435345\",\r\n    \"practicing\": true,\r\n    \"practice\": {\r\n        \"id\": \"fe105a44-ff1f-450f-8091-e06be73ffef1\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}/api/practices/providers",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"practices",
+						"providers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/practices/providers/{{providerId}}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\",()=> {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"verify status message OK\",()=>{\r",
+							"    pm.expect(pm.response.status).to.eqls(\"OK\")\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{protocol}}://{{host}}/api/practices/providers/{{providerId}}",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"practices",
+						"providers",
+						"{{providerId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/labs/laboratory",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var response = JSON.parse(responseBody)\r",
+							"var lbid = response.id\r",
+							"console.log\r",
+							"\r",
+							"pm.collectionVariables.set(\"labid\", lbid);\r",
+							"console.log\r",
+							"\r",
+							"pm.test(\"Status code is 200\",()=> {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"verify status message OK\",()=>{\r",
+							"    pm.expect(pm.response.status).to.eqls(\"OK\")\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{$randomFullName}}\",\r\n    \"location\": {\r\n        \"street\": \"1151 Sorrento Valley Blvd\",\r\n        \"city\": \"San Diego\",\r\n        \"state\": \"CA\",\r\n        \"postalCode\": \"92042\",\r\n        \"country\": \"United States\"\r\n    },\r\n    \"contact\": {\r\n        \"phoneNumber\": \"18584432925\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}/api/labs/laboratory",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"labs",
+						"laboratory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/apis/labs/laboratory/{labid}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Status code is 200\",()=> {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"verify status message OK\",()=>{\r",
+							"    pm.expect(pm.response.status).to.eqls(\"OK\")\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{protocol}}://{{host}}/api/labs/laboratory/{{labid}}",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"labs",
+						"laboratory",
+						"{{labid}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/labs/kits",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var response = JSON.parse(responseBody)\r",
+							"var ktid = response.id\r",
+							"console.log\r",
+							"\r",
+							"pm.collectionVariables.set(\"kitId\", ktid);\r",
+							"console.log\r",
+							"\r",
+							"pm.test(\"Status code is 200\",()=> {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"verify status message OK\",()=>{\r",
+							"    pm.expect(pm.response.status).to.eql(\"OK\")\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"code\": \"2342344324\",\r\n    \"sampleNumber\": \"5434534534\",\r\n    \"type\": \"CAPILLARY\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}/api/labs/kits",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"labs",
+						"kits"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/labs/kits/{{kitId}}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\",()=> {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"verify status message OK\",()=>{\r",
+							"    pm.expect(pm.response.status).to.eqls(\"OK\")\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}/api/labs/kits/{{kitId}}",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"labs",
+						"kits",
+						"{{kitId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/orders",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var response = JSON.parse(responseBody)\r",
+							"var orid = response.id\r",
+							"console.log\r",
+							"\r",
+							"pm.collectionVariables.set(\"orderId\", orid);\r",
+							"console.log\r",
+							"\r",
+							"pm.test(\"Status code is 200\",()=> {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"verify status message OK\",()=>{\r",
+							"    pm.expect(pm.response.status).to.eqls(\"OK\")\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"amount\": 349.99,\r\n    \"subTotal\": 349.99,\r\n    \"totalShipping\": 5.99,\r\n    \"totalTax\": 0.0,\r\n    \"currency\": \"USD\",\r\n    \"customer\": {\r\n        \"id\": \"{{userId}}\",\r\n        \"firstName\": \"amien\",\r\n        \"lastName\": \"bena\"\r\n    },\r\n    \"currentStatus\": \"CREATED\",\r\n    \"checkoutId\": \"Zfh44626-744z-4bg3-acnt-9eczl9fg8lc3\",\r\n    \"cartId\": \"lZL656h7-ngb3-44z7-9g2d-cntc9hcgsk33\",\r\n    \"discount\": {\r\n        \"type\": \"PROMO_CODE\",\r\n        \"mode\": \"AMOUNT\",\r\n        \"amountDiscounted\": 25.0,\r\n        \"discountApplied\": true\r\n    },\r\n    \"orderStatusHistory\": [\r\n        {\r\n            \"statusType\": \"CREATED\",\r\n            \"updatedAt\": 1646982867969\r\n        }\r\n    ],\r\n    \"lineItems\": [\r\n        {\r\n            \"type\": \"TEST\",\r\n                \"description\": \"Juno Early Fetal Sex Test\",\r\n                \"amount\": 349.99,\r\n                \"originalUnitPrice\": 0.0,\r\n                \"insuranceEstimatedCoveredAmount\": 0.0,\r\n                \"sku\": \"KIT238349\",\r\n                \"productId\": \"1cb9c1b7-b341-41d6-acce-aefb52874b4e\",\r\n                \"productName\": \"Juno Early Fetal Sex Test\",\r\n                \"taxable\": false,\r\n                \"requiresShipping\": true,\r\n                \"quantity\": 1,\r\n                \"laboratoryOrderDetails\": {\r\n                    \"orderType\": \"SELF_CREATED\",\r\n                    \"requisitionFormUrl\": \"https://somewhere.ons3.com/finditpath.df3\",\r\n                    \"providerApproval\": {\r\n                        \"requiresApproval\": true,\r\n                        \"approved\": true,\r\n                        \"approvalDate\": 1647015565904,\r\n                        \"approvingProvider\": {\r\n                            \"id\": \"{{providerId}}\"\r\n                        }\r\n                    },\r\n                    \"patientConsent\": {\r\n                        \"formName\": \"Medical Informed Consent Form\",\r\n                        \"type\": \"MEDICAL\",\r\n                        \"approval\": true,\r\n                        \"approvalDate\": 1647015565898\r\n                    },\r\n                    \"lab\": {\r\n                            \"id\": \"{{labid}}\",\r\n                            \"name\": \"Juno San Diego\"\r\n                        },\r\n                        \"testRuns\": [\r\n                            {\r\n                                \"kit\": {\r\n                                    \"id\": \"{{kitId}}\"\r\n                                },\r\n                                \"status\": [\r\n                                    {\r\n                                        \"status\": \"KIT_ASSIGNED\"\r\n                                    }\r\n                                ]\r\n                            }\r\n                        ]\r\n                }\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}/api/orders",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/orders/{{orderId}}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\",()=> {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"verify status message OK\",()=>{\r",
+							"    pm.expect(pm.response.status).to.eqls(\"OK\")\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}/api/orders/{{orderId}}",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"orders",
+						"{{orderId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "localhost:9090",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "protocol",
+			"value": "http",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "providerId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "labid",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "kitId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "orderId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "emailaddress",
+			"value": ""
+		},
+		{
+			"key": "practicesId",
+			"value": ""
+		},
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}
